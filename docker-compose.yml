@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  postgres:
+    container_name: fluxo_mineracao
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: db_fluxo_mineracao
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /data/postgres
+    volumes:
+       - .docker:/data/postgres
+    ports:
+      - "5432:5432"
+volumes:
+    postgres:
