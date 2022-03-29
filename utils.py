@@ -8,6 +8,8 @@ import re
 
 rb.init(api_url="http://localhost:6900")
 
+import EventSearch as event
+
 # extrair id_texto
 def extrair_id_texto(df2):
     #EXTRAIR ID TEXTO
@@ -108,3 +110,20 @@ def substitui_textos_classificados(df, df_textos_classificados):
     df = pd.concat(dfs)
     print(len(df))
     return df
+
+def data_classification(recived_data):
+    if len(recived_data) == 0:
+        return 'Your data is empty!'
+    datas = pd.DataFrame()
+    for path in recived_data:
+        file = archive_txt_with_path(path)
+        was_classifield =  event.search(file)
+#         print(f'path: {path} -  classification: {was_classifield}')
+        datas = datas.append({'path': path, 'text': file, 'classification': was_classifield}, ignore_index=True)
+    
+    datas['status_of_classification'] = datas['classification'].apply(lambda x: 'classified' if x else 'unclassified')
+    return datas
+
+
+def read_dataset_pkl(dataset_name):
+    return pd.read_pickle(f'./{dataset_name}.pkl')
