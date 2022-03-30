@@ -1,4 +1,5 @@
 import pandas as pd
+import joblib
 import utils
 
 from sklearn.model_selection import train_test_split
@@ -84,5 +85,7 @@ def main():
 
     erros.to_pickle("./dataset_erros.pkl")
 
+    joblib.dump(sgd_pipeline, './sgd_pipeline.pkl', compress = 1)
+    
 if __name__ == '__main__':
     main()
