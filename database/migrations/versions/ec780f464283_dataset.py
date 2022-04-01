@@ -1,8 +1,8 @@
-"""input
+"""dataset
 
-Revision ID: 53226b2d6c7a
+Revision ID: ec780f464283
 Revises: 
-Create Date: 2022-03-27 07:53:33.104606
+Create Date: 2022-03-31 21:42:16.599853
 
 """
 from alembic import op
@@ -15,21 +15,21 @@ from sqlalchemy.sql import func
 
 
 # revision identifiers, used by Alembic.
-revision = '53226b2d6c7a'
+revision = 'ec780f464283'
 down_revision = None
 branch_labels = None
 depends_on = None
 
 
 def upgrade():
-    op.create_table(
-        'input',
-        Column('text', Text()),
-        Column('id_texto',  String(100)),
 
-        Column('created_at', DateTime(timezone=True), server_default=func.now()),
-        Column('updated_at', DateTime(timezone=True), onupdate=func.now())
+    op.create_table(
+        'dataset',
+        Column('id',Integer, primary_key=True, autoincrement=True, nullable=False),
+        Column('nome', String(250)),
+        Column('tipo', String(250))
     )
 
+
 def downgrade():
-    op.drop_table('input')
+    op.drop_table('dataset')
