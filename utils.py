@@ -1,12 +1,9 @@
 # %matplotlib inline
 import matplotlib.pyplot as plt
 
-import rubrix as rb
 import pandas as pd
 import glob
 import re
-
-rb.init(api_url="http://localhost:6900")
 
 import EventSearch as event
 
@@ -110,6 +107,11 @@ def substitui_textos_classificados(df, df_textos_classificados):
     df = pd.concat(dfs)
     print(len(df))
     return df
+
+def archive_txt_with_path(path):
+    file = open(path, "r")
+    file = file.read()
+    return file    
 
 def data_classification(recived_data):
     if len(recived_data) == 0:

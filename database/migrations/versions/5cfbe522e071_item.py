@@ -27,7 +27,8 @@ def upgrade():
         'item',
         Column('id',Integer, primary_key=True, autoincrement=True, nullable=False),
         Column('texto', Text()),
-        Column('id_dataset', Integer, ForeignKey('dataset.id'))
+        Column('id_dataset', Integer, ForeignKey('dataset.id')),
+        Column('nome', String(250))
     )
 
 def downgrade():
