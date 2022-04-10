@@ -6,7 +6,6 @@ from sklearn.model_selection import train_test_split
 
 # Vetorização TD-IDF e pipeline
 
-from sklearn.tree import DecisionTreeClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfVectorizer,CountVectorizer, TfidfTransformer
 

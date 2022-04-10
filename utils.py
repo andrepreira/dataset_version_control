@@ -5,7 +5,7 @@ import pandas as pd
 import glob
 import re
 
-import EventSearch as event
+from classificacao.EventSearch import EventSearcher as event
 
 # extrair id_texto
 def extrair_id_texto(df2):

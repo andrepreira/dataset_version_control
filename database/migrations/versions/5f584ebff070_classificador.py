@@ -27,7 +27,8 @@ def upgrade():
         'classificador',
         Column('id',Integer, primary_key=True, autoincrement=True, nullable=False),
         Column('nome', String(250)),
-        Column('path', String(350)),
+        Column('tipo', String(250)),
+        Column('path', Text()),
     )
 
 
