@@ -35,7 +35,6 @@ def extrai_erros(df, y_test, y_pred, probabilities):
     idx_off_diag_conf_matrix = [i for i,p in idxs if p]
 
     erros = df.query('index in @idx_off_diag_conf_matrix')
-    erros.index = range(erros.shape[0])
 
     erros_prob = probabilities[idx_off_diag_conf_matrix]
     print('A quantidade de dados classificados com erro neste treinamento é: {} '.format(len(idx_off_diag_conf_matrix)))
@@ -48,7 +47,7 @@ def pipeline_vetorizacao_classificacao():
                     ('clf', SGDClassifier(loss='modified_huber')),
                 ])
                 
-def extract_label(df):
+def predict_ml(df):
 
     x = df.texto
     y = df.label_regex
@@ -65,8 +64,4 @@ def extract_label(df):
 
     df['predict_classification'] = y_pred_all
    
-    return df
-
-
-def extract_label_erros():
-    pass
+    return df, sgd_pipeline

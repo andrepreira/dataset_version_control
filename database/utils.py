@@ -1,4 +1,5 @@
 import sqlalchemy as db
+import pandas as pd
 
 def import_table(table_name, conn):
     metadata = db.MetaData()
@@ -11,3 +12,11 @@ def insert_db(table_name,conn, value_list):
 
 def insere_dataframe_append(name_table,conn, data):
          data.to_sql(name_table, conn, if_exists='append', index = False)
+
+def select_labels(table_name, conn, id_versao):
+    table = import_table(table_name, conn)
+    query = db.select([table.columns.label, table.columns.id_item]).where(table.columns.id_versao == id_versao)
+    r =  conn.execute(query).fetchall()
+    df = pd.DataFrame(r)
+    df.columns = r[0].keys()
+    return  df
