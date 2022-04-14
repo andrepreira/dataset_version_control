@@ -11,7 +11,7 @@ def popula_tabelas_iniciais(conn, table_name, values_list):
 #criar itens
 def popula_tabela_itens(conn, table_name, id_dataset):
        # Trata dataset para inserir no banco
-    dataset = read_dataset_pkl('dataset_treinado')
+    dataset = read_dataset_pkl('dataset_2021')
     dataset['id_dataset'] = id_dataset
     dataset = dataset.rename(columns = {'text': 'texto'})
     col = ['texto','id_dataset']
