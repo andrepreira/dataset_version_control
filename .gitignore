@@ -114,6 +114,7 @@ celerybeat.pid
 # Environments
 .env
 .venv
+.fluxo_mineracao
 env/
 venv/
 ENV/
