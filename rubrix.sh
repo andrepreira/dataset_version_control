@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python3 recebe_dados_rubrix.py
+python3 corrige_labels.py

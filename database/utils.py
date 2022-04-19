@@ -20,3 +20,7 @@ def select_labels(table_name, conn, id_versao):
     df = pd.DataFrame(r)
     df.columns = r[0].keys()
     return  df
+    
+def popula_tabelas_iniciais(conn, table_name, values_list):
+    classificador = import_table(table_name, conn)
+    insert_db(classificador, conn, values_list)

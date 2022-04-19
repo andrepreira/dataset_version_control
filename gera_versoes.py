@@ -2,24 +2,6 @@ from database.models import db_connect
 from utils import *
 from database.utils  import *
 
-#criar classificador
-#criar dataset  
-def popula_tabelas_iniciais(conn, table_name, values_list):
-    classificador = import_table(table_name, conn)
-    insert_db(classificador, conn, values_list)
-    
-#criar itens
-def popula_tabela_itens(conn, table_name, id_dataset):
-       # Trata dataset para inserir no banco
-    dataset = read_dataset_pkl('dataset_2021')
-    dataset['id_dataset'] = id_dataset
-    dataset = dataset.rename(columns = {'text': 'texto'})
-    col = ['texto','id_dataset']
-    dataset = dataset[col]
-
-    # Salva dataset no banco de dados
-    insere_dataframe_append(table_name, conn, dataset)
-
 def main():
     conn = db_connect()
 
@@ -31,11 +13,6 @@ def main():
         'path': '/home/andre-pereira/projects/data_science/aisolutions/fluxo_mineracao/sgd_pipeline.pkl'}]
 
     popula_tabelas_iniciais(conn, 'classificador', values_list_classificador)
-
-    values_list_dataset= [{'nome': 'nomeação e classificação prefeitura de maceio e ama v1', 'tipo': 'texto'}]
-    popula_tabelas_iniciais(conn, 'dataset', values_list_dataset)
-
-    popula_tabela_itens(conn, 'item', 1)
 
     values_list_versao= [{
             'nome': 'versão regex v1', 
@@ -70,6 +47,7 @@ def main():
             }]
 
     insert_db('versao', conn, values_list_versao)
+    print("Fim da geração das versões !")
 
 
 if __name__ == "__main__":

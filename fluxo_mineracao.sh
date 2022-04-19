@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python3 tabelas.py && python3 main.py
+python3 gera_dataset.py && python3 gera_versoes.py && python3 classificador.py
