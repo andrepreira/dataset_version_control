@@ -46,9 +46,28 @@ def pipeline_vetorizacao_classificacao():
                     ('tfidf', TfidfTransformer()),
                     ('clf', SGDClassifier(loss='modified_huber')),
                 ])
+def filtra_dataset(df, classification_list):
+    # Filtra dataset
+    df = df[df.status == 'classified']
+    outros = df.query("label_regex not in @classification_list & status == 'classified'")
+    outros['label_regex'] = 'OUTROS'
+    df_lista = df.query("label_regex in @classification_list")
+    # retorna dataset
+    df_resultado = pd.concat([df_lista, outros])
+    df_resultado.reset_index()
+    return df_resultado
                 
 def predict_ml(df):
+    lista = [
+    'NOMEACAO DE CARGO EM COMISSAO',
+    'EXONERACAO DE CARGO EFETIVO', 
+    'EXONERACAO DE CARGO EM COMISSAO', 
+    'NOMEACAO EM CARGO EFETIVO',
+    'DEMISSAO',
+    'APOSENTADORIA'
+    ]
 
+    df = filtra_dataset(df, lista)
     x = df.texto
     y = df.label_regex
 
