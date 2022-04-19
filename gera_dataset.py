@@ -1,9 +1,13 @@
 import glob
 import pandas as pd
 
+from database.models import db_connect
+from utils import *
+from database.utils  import *
+
 def get_datas(ano = '2021'):
-        ama_datas = glob.glob(f'/var/projects/tceal/materias/executivo/municipal/ama/edicoes/{ano}/*/*/*.txt')
-        maceio_datas = glob.glob(f'/var/projects/tceal/materias/executivo/municipal/maceio/prefeitura/edicoes/{ano}/*/*/*.txt')
+        ama_datas = glob.glob(f'/home/andre-pereira/projects/data_science/materias/executivo/municipal/ama/edicoes/{ano}/*/*/*.txt')
+        maceio_datas = glob.glob(f'/home/andre-pereira/projects/data_science/materias/executivo/municipal/maceio/prefeitura/edicoes/{ano}/*/*/*.txt')
 
         print(f'the number of txt archive is: {len(ama_datas)}')
         print(f'the number of txt archive is: {len(maceio_datas)}')
@@ -26,13 +30,30 @@ def dataframe(recived_data):
     
     return datas
 
+#criar itens
+def popula_tabela_itens(conn, table_name, id_dataset, dataset):
+    # Trata dataset para inserir no banco
+    dataset['id_dataset'] = id_dataset
+    col = ['texto','id_dataset']
+    dataset = dataset[col]
+
+    # Salva dataset no banco de dados
+    insere_dataframe_append(table_name, conn, dataset)
+
 def main():
+    conn = db_connect()
 
+    # extrai materias
     dataset =  get_datas()
-
     dataset = dataframe(dataset)
 
-    dataset.to_pickle("./dataset_2021.pkl")
+    #cadastra dataset no banco
+    values_list_dataset= [{'nome': 'nomeação e classificação prefeitura de maceio e ama v1', 'tipo': 'texto'}]
+    popula_tabelas_iniciais(conn, 'dataset', values_list_dataset)
+
+    #popula tabela itens
+    popula_tabela_itens(conn, 'item', 1, dataset)
+    print("Fim da geração do dataset !")
 
 if __name__ == '__main__':
     main()

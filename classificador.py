@@ -5,6 +5,7 @@ def main():
     conn = db_connect()
     obj = Classificador(1, conn)
     obj.run()
+    print("Finalização do classificador !")
 
 if __name__ == "__main__":
    main()  
