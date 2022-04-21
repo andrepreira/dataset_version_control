@@ -6,13 +6,13 @@ from database.utils  import *
 from classificacao.classificacao_ml import *
 from classificacao.classificacao_regex import *
 
-DATASET_ERROS_RUBRIX = "erros_rubrix"
-
 class Classificador:
     
-    def __init__(self, id_dataset, conn):
+    def __init__(self, id_dataset, conn, nome_rubrix, ids):
         self.id_dataset = id_dataset
         self.conn = conn
+        self.nome_rubrix = nome_rubrix
+        self.ids = ids
     
     def pega_itens(self):
         item = import_table('item', self.conn)
@@ -65,7 +65,7 @@ class Classificador:
         ]
 
         # Log the records
-        rb.log(records, name=DATASET_ERROS_RUBRIX, 
+        rb.log(records, name=self.nome_rubrix, 
             tags={
                 "dataset": "erros classificacao diarios oficiais 2021",
                 "metodologia": "dados off diagonal da matriz de confusao",
@@ -86,11 +86,11 @@ class Classificador:
         self.envio_rubrix(df_erros, sgd_pipeline, 'DecisionTreeClassifier')
 
         #regex
-        self.insere_labels('classificados', self.conn, df, 1, 'label_regex', 'dados regex salvos no banco!!')
+        self.insere_labels('classificados', self.conn, df, self.ids[0], 'label_regex', 'dados regex salvos no banco!!')
                 
         #machine learning
-        self.insere_labels('classificados', self.conn, df, 2, 'predict_classification', 'dados machine learning salvos no banco!!')
+        self.insere_labels('classificados', self.conn, df, self.ids[1], 'predict_classification', 'dados machine learning salvos no banco!!')
 
         #diff entre regex e machine learning
-        self.insere_labels('classificados', self.conn, df_erros, 3, 'predict_classification', 'dados diff salvos no banco!!')
+        self.insere_labels('classificados', self.conn, df_erros, self.ids[2], 'predict_classification', 'dados diff salvos no banco!!')
 
