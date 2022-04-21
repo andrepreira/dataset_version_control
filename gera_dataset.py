@@ -1,3 +1,4 @@
+import argparse
 import glob
 import pandas as pd
 
@@ -5,6 +6,18 @@ from database.models import db_connect
 from utils import *
 from database.utils  import *
 
+def retorna_parametros():
+    parser = argparse.ArgumentParser(description='Retorna parâmetros.')
+    parser.add_argument('-i', '--ids', type=int, nargs='+',
+                    help='insira uma sequencia de ids')
+    parser.add_argument('-nd', '--nome_dataset', type=str,
+                    help='insira o nome do arquivo rubrix')
+    parser.add_argument('-td', '--tipo_dataset', type=str,
+                    help='insira o nome do arquivo rubrix')
+    
+    args = parser.parse_args()
+    return args.ids, args.nome_dataset, args.tipo_dataset
+   
 def get_datas(ano = '2021'):
         ama_datas = glob.glob(f'/home/andre-pereira/projects/data_science/materias/executivo/municipal/ama/edicoes/{ano}/*/*/*.txt')
         maceio_datas = glob.glob(f'/home/andre-pereira/projects/data_science/materias/executivo/municipal/maceio/prefeitura/edicoes/{ano}/*/*/*.txt')
@@ -43,17 +56,22 @@ def popula_tabela_itens(conn, table_name, id_dataset, dataset):
 def main():
     conn = db_connect()
 
-    # extrai materias
-    dataset =  get_datas()
-    dataset = dataframe(dataset)
+    ids, nome_dataset, tipo_dataset = retorna_parametros()
+    print(ids[0])
+    print(nome_dataset)
+    print(tipo_dataset)
 
-    #cadastra dataset no banco
-    values_list_dataset= [{'nome': 'nomeação e classificação prefeitura de maceio e ama v1', 'tipo': 'texto'}]
-    popula_tabelas_iniciais(conn, 'dataset', values_list_dataset)
+    # # extrai materias
+    # dataset =  get_datas()
+    # dataset = dataframe(dataset)
 
-    #popula tabela itens
-    popula_tabela_itens(conn, 'item', 1, dataset)
-    print("Fim da geração do dataset !")
+    # #cadastra dataset no banco
+    # values_list_dataset= [{'nome': nome_dataset, 'tipo': tipo_dataset}]
+    # popula_tabelas_iniciais(conn, 'dataset', values_list_dataset)
+
+    # #popula tabela itens
+    # popula_tabela_itens(conn, 'item', ids[0], dataset)
+    # print("Fim da geração do dataset !")
 
 if __name__ == '__main__':
     main()

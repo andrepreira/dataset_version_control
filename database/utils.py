@@ -1,6 +1,6 @@
 import sqlalchemy as db
 import pandas as pd
-
+ 
 def import_table(table_name, conn):
     metadata = db.MetaData()
     return db.Table(table_name, metadata, autoload=True, autoload_with=conn)
