@@ -8,7 +8,7 @@ source .fluxo_mineracao/bin/activate
 
 bash reseta_migrations.sh
 
-- fluxo até envio de erros no rubrix
+fluxo até envio de erros no rubrix
 
     - primeiro ciclo: classificação fraca com regex e classifica com algoritmo machine learning
         bash versiona_vida_funcional_sgd/01_fluxo.sh 
