@@ -3,16 +3,13 @@ import rubrix as rb
 from datetime import datetime
 
 from database.utils  import *
-from classificacao.classificacao_ml import *
-from classificacao.classificacao_regex import *
 
 class Classificador:
     
-    def __init__(self, id_dataset, conn, nome_rubrix, ids):
+    def __init__(self, id_dataset, conn, nome_rubrix):
         self.id_dataset = id_dataset
         self.conn = conn
         self.nome_rubrix = nome_rubrix
-        self.ids = ids
     
     def pega_itens(self):
         item = import_table('item', self.conn)
@@ -36,15 +33,12 @@ class Classificador:
         print(msg)
 
     def extraindo_erros_dataset(self, df, pipeline):
-        selection = df['label_regex'] != df['predict_classification']
-        
-        idxs = list(enumerate(selection))
-        idx_off_diag_conf_matrix = [i for i,p in idxs if p]
+        df2 = df[df['label_regex'] != df['predict_classification']]
+        erros = df2[df2['predict_proba_label'].apply(max) < 0.9]
 
-        erros = df.query('index in @idx_off_diag_conf_matrix')
         erros_prob = pipeline.predict_proba(erros.texto)
         
-        print('A quantidade de dados classificados com erro neste treinamento é: {} '.format(len(idx_off_diag_conf_matrix)))
+        print('A quantidade de dados classificados com erro neste treinamento é: {} '.format(len(erros)))
         erros['probabilities'] = list(erros_prob)
         return erros
 
@@ -68,29 +62,7 @@ class Classificador:
         rb.log(records, name=self.nome_rubrix, 
             tags={
                 "dataset": "erros classificacao diarios oficiais 2021",
-                "metodologia": "dados off diagonal da matriz de confusao",
+                "metodologia": "dados off diagonal da matriz de confusao e com probabilidade menor que 90%",
                 "data": data_atual.strftime('%d/%m/%Y')
                 },
             )
-
-    def run(self):
-        # pega itens no banco
-        item = self.pega_itens()
-        # classifica com regex e retorna dataset com colunas: texto, labels, status
-        df = regex(item)
-        df, sgd_pipeline = predict_ml(df)
-        
-        df_erros = self.extraindo_erros_dataset(df, sgd_pipeline)
-
-        #envio de dados rubrix
-        self.envio_rubrix(df_erros, sgd_pipeline, 'DecisionTreeClassifier')
-
-        #regex
-        self.insere_labels('classificados', self.conn, df, self.ids[0], 'label_regex', 'dados regex salvos no banco!!')
-                
-        #machine learning
-        self.insere_labels('classificados', self.conn, df, self.ids[1], 'predict_classification', 'dados machine learning salvos no banco!!')
-
-        #diff entre regex e machine learning
-        self.insere_labels('classificados', self.conn, df_erros, self.ids[2], 'predict_classification', 'dados diff salvos no banco!!')
-

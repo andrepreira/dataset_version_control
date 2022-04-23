@@ -57,21 +57,22 @@ def main():
     conn = db_connect()
 
     ids, nome_dataset, tipo_dataset = retorna_parametros()
-    print(ids[0])
-    print(nome_dataset)
-    print(tipo_dataset)
 
-    # # extrai materias
-    # dataset =  get_datas()
-    # dataset = dataframe(dataset)
+    # print(ids[0])
+    # print(nome_dataset)
+    # print(tipo_dataset)
 
-    # #cadastra dataset no banco
-    # values_list_dataset= [{'nome': nome_dataset, 'tipo': tipo_dataset}]
-    # popula_tabelas_iniciais(conn, 'dataset', values_list_dataset)
+    # extrai materias
+    dataset =  get_datas()
+    dataset = dataframe(dataset)
 
-    # #popula tabela itens
-    # popula_tabela_itens(conn, 'item', ids[0], dataset)
-    # print("Fim da geração do dataset !")
+    #cadastra dataset no banco
+    values_list_dataset= [{'nome': nome_dataset, 'tipo': tipo_dataset}]
+    popula_tabelas_iniciais(conn, 'dataset', values_list_dataset)
+
+    #popula tabela itens
+    popula_tabela_itens(conn, 'item', ids[0], dataset)
+    print("Fim da geração do dataset !")
 
 if __name__ == '__main__':
     main()

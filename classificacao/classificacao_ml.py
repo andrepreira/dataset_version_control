@@ -54,7 +54,7 @@ def filtra_dataset(df, classification_list):
     df_lista = df.query("label_regex in @classification_list")
     # retorna dataset
     df_resultado = pd.concat([df_lista, outros])
-    df_resultado.reset_index()
+    # df_resultado.reset_index()
     return df_resultado
                 
 def predict_ml(df):
@@ -82,5 +82,9 @@ def predict_ml(df):
     y_pred_all = sgd_pipeline.predict(df.texto)
 
     df['predict_classification'] = y_pred_all
+
+    y_pred_proba_all = sgd_pipeline.predict_proba(df.texto)
+
+    df['predict_proba_label'] = list(y_pred_proba_all)
    
     return df, sgd_pipeline
