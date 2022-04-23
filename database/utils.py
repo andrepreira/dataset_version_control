@@ -13,16 +13,19 @@ def insert_db(table_name,conn, value_list):
 def insere_dataframe_append(name_table,conn, data):
          data.to_sql(name_table, conn, if_exists='append', index = False)
 
-def select_two_tables(conn, id_dataset):
+def select_itens_modelo_versao(conn, id_dataset, id_versao):
     item = import_table('item', conn)
     classificados = import_table('classificados', conn)
 
     query = db.select([item.columns.texto, classificados.columns.label, 
-    classificados.columns.id_item]).where(item.columns.id == classificados.columns.id_item and item.columns.id_dataset == id_dataset)
+    item.columns.id]).where(item.columns.id == classificados.columns.id_item 
+    and item.columns.id_dataset == id_dataset and classificados.columns.id_versao == id_versao)
 
     r =  conn.execute(query).fetchall()
     df = pd.DataFrame(r)
     df.columns = r[0].keys()
+    df.rename(columns={"label": "label_regex"}, inplace = True)
+    df['status'] = df['label_regex'].apply(lambda x: 'classified' if x else 'unclassified')
     return  df
     
 def select_labels(table_name, conn, id_versao):

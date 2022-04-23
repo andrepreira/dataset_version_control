@@ -7,15 +7,19 @@ from database.utils  import *
 
 def retorna_parametros():
     parser = argparse.ArgumentParser(description='Retorna os ids.')
-    parser.add_argument('-i', '--ids', type=int, nargs='+',
-                    help='insira uma sequencia de ids')
+    parser.add_argument('-ivr', '--id_version_rubrix', type=int,
+                    help='insira o nome do arquivo rubrix')
+    parser.add_argument('-ivml', '--id_version_modelo_ml', type=int,
+                    help='insira o nome do arquivo rubrix')
+    parser.add_argument('-ivm', '--id_version_merge', type=int,
+                    help='insira o nome do arquivo rubrix')
     parser.add_argument('-d', '--dataset_id', type=int,
                     help='insira uma sequencia de ids')
     parser.add_argument('-r', '--rubrix', type=str,
                     help='insira o nome do arquivo rubrix')
     
     args = parser.parse_args()
-    return args.ids, args.dataset_id, args.rubrix
+    return args.id_version_rubrix, args.id_version_modelo_ml, args.id_version_merge, args.dataset_id, args.rubrix
 
 def salva_merge(df, label_name, conn, id_versao, msg='dados salvos'):
     for idx, row in df.iterrows():
@@ -63,6 +67,7 @@ def substitui_labels_corrigidas(df_antigo, df_corrigido):
     #substitui labels antigas pelas corrigidas
     dfs = [df_antigo, df_corrigido]
     df_antigo = pd.concat(dfs)
+    print(len(df_antigo))
 
     return df_antigo
 
@@ -73,7 +78,7 @@ def insere_id_versao(df, id_versao):
 def main():
    
     conn = db_connect()
-    ids, dataset_id, nome_rubrix = retorna_parametros()
+    id_version_rubrix, id_version_modelo_ml, id_version_merge, dataset_id, nome_rubrix = retorna_parametros()
 
     # print(dataset_id)
     # print(ids[0])
@@ -81,19 +86,19 @@ def main():
     # print(ids[2])
     # print(nome_rubrix)
 
-    c = Classificador(dataset_id, conn, nome_rubrix, ids)
+    c = Classificador(dataset_id, conn, nome_rubrix)
 
     df_corrigido = load_df_rubrix(nome_rubrix)
 
     #salva labels classificadas manualmente no rubrix
-    insere_labels('classificados', conn, df_corrigido, ids[0], msg='dados rubrix salvos no banco!!')
+    insere_labels('classificados', conn, df_corrigido, id_version_rubrix, msg='dados rubrix salvos no banco!!')
 
     #pega labels machine learning no banco
-    df_modelo = select_labels('classificados', conn, ids[1])
+    df_modelo = select_labels('classificados', conn, id_version_modelo_ml)
     df = substitui_labels_corrigidas(df_modelo, df_corrigido)
 
     #merge das labels preditas pelo modelo e corrigidas manualmente no rubrix
-    insere_labels('classificados', conn, df, ids[2], msg='dados merge salvos no banco!!')
+    insere_labels('classificados', conn, df, id_version_merge, msg='dados merge salvos no banco!!')
 
 if __name__ == "__main__":
    main()  

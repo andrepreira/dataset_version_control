@@ -62,7 +62,7 @@ class Classificador:
         rb.log(records, name=self.nome_rubrix, 
             tags={
                 "dataset": "erros classificacao diarios oficiais 2021",
-                "metodologia": "dados off diagonal da matriz de confusao",
+                "metodologia": "dados off diagonal da matriz de confusao e com probabilidade menor que 90%",
                 "data": data_atual.strftime('%d/%m/%Y')
                 },
             )
