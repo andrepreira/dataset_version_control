@@ -8,4 +8,4 @@ python3 gera_versoes.py -i 1 2 2 2 2 -mv '' '' '' 1 '' -nv 'versão regex v1' 'v
 
 python3 gera_itens_regex.py -ir 1 -d 1 -r erro_rubrix_v1
 
-python3 gera_classificacao.py --dataset_id 1 --rubrix erro_rubrix_v1 --id_versao_modelo_ml 2 --id_versao_diff 3 --versao_id 1
+python3 gera_classificacao.py --dataset_id 1 --rubrix erro_rubrix_v1 --id_versao_modelo_ml 2 --id_versao_diff 3 --versao_id 1 --nome_pipeline sgd_pipeline_v1 --nome_dataset dataset_corrigido_v1

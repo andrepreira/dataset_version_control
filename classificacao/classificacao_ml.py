@@ -1,8 +1,8 @@
-import pandas as pd
 import utils
 
+import pandas as pd
 from sklearn.model_selection import train_test_split
-
+import joblib
 # Vetorização TD-IDF e pipeline
 
 from sklearn.pipeline import Pipeline
@@ -57,7 +57,7 @@ def filtra_dataset(df, classification_list):
     # df_resultado.reset_index()
     return df_resultado
                 
-def predict_ml(df):
+def predict_ml(df, nome_pipeline, nome_dataset):
     lista = [
     'NOMEACAO DE CARGO EM COMISSAO',
     'EXONERACAO DE CARGO EFETIVO', 
@@ -86,5 +86,8 @@ def predict_ml(df):
     y_pred_proba_all = sgd_pipeline.predict_proba(df.texto)
 
     df['predict_proba_label'] = list(y_pred_proba_all)
+
+    joblib.dump(sgd_pipeline, f'./versiona_vida_funcional_sgd/pipeline/{nome_pipeline}.pkl')
+    df.to_pickle(f'./versiona_vida_funcional_sgd/dataset/{nome_dataset}.pkl')
    
     return df, sgd_pipeline

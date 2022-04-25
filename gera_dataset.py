@@ -18,31 +18,6 @@ def retorna_parametros():
     args = parser.parse_args()
     return args.ids, args.nome_dataset, args.tipo_dataset
    
-def get_datas(ano = '2021'):
-        ama_datas = glob.glob(f'/home/andre-pereira/projects/data_science/materias/executivo/municipal/ama/edicoes/{ano}/*/*/*.txt')
-        maceio_datas = glob.glob(f'/home/andre-pereira/projects/data_science/materias/executivo/municipal/maceio/prefeitura/edicoes/{ano}/*/*/*.txt')
-
-        print(f'the number of txt archive is: {len(ama_datas)}')
-        print(f'the number of txt archive is: {len(maceio_datas)}')
-
-        return ama_datas + maceio_datas
-
-def archive_txt_with_path(path):
-    file = open(path, "r")
-    file = file.read()
-    return file    
-
-def dataframe(recived_data):
-    if len(recived_data) == 0:
-        return 'Your data is empty!'
-    datas = pd.DataFrame()
-    for path in recived_data:
-        file = archive_txt_with_path(path)
-#         print(f'path: {path} -  classification: {was_classifield}')
-        datas = datas.append({'texto': file}, ignore_index=True)
-    
-    return datas
-
 #criar itens
 def popula_tabela_itens(conn, table_name, id_dataset, dataset):
     # Trata dataset para inserir no banco
