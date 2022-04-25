@@ -50,7 +50,7 @@ class Classificador:
         records = [
             rb.TextClassificationRecord(
                 id=idx,
-                inputs=row['texto'],
+                inputs=[row['texto'], row['id']],
                 prediction=list(zip(pipeline.classes_, row['probabilities'])),
                 prediction_agent=agent_name,
 

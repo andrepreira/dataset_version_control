@@ -17,13 +17,17 @@ def retorna_parametros():
                     help='insira o nome do arquivo rubrix')
     parser.add_argument('-iv', '--versao_id', type=int,
                     help='insira o nome do arquivo rubrix')
+    parser.add_argument('-np', '--nome_pipeline', type=str,
+                    help='insira o nome do arquivo rubrix')
+    parser.add_argument('-nd', '--nome_dataset', type=str,
+                    help='insira o nome do arquivo rubrix')
     
     args = parser.parse_args()
-    return args.id_versao_modelo_ml, args.id_versao_diff, args.rubrix, args.dataset_id, args.versao_id
+    return args.id_versao_modelo_ml, args.id_versao_diff, args.rubrix, args.dataset_id, args.versao_id, args.nome_pipeline, args.nome_dataset
 
 def main():
     conn = db_connect()
-    id_versao_modelo_ml, id_versao_diff,nome_rubrix, dataset_id, versao_id = retorna_parametros()
+    id_versao_modelo_ml, id_versao_diff,nome_rubrix, dataset_id, versao_id, nome_pipeline, nome_dataset = retorna_parametros()
 
     # print(ids[0])
     # print(ids[1])
@@ -35,7 +39,7 @@ def main():
 
     df = select_itens_modelo_versao(conn, dataset_id, versao_id)
     
-    df, sgd_pipeline = predict_ml(df)
+    df, sgd_pipeline = predict_ml(df, nome_pipeline, nome_dataset)
   
     df_erros = obj.extraindo_erros_dataset(df, sgd_pipeline)
 
