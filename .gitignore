@@ -1,3 +1,12 @@
+#pkl's
+dataset_merge_v*.pkl
+dataset_treinado_v*.pkl
+dataset_corrigido_v*.pkl
+df_correcao_rubrix_v*.pkl
+erros_rubrix_v1*.pkl
+df_regex_v0.pkl
+predict_all_datas_ml.pkl
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
