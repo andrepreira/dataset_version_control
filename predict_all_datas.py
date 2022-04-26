@@ -1,4 +1,6 @@
 import pandas as pd
+import joblib
+
 from utils import *
 
 def predict_all_datas_ml(pipeline):
@@ -16,7 +18,7 @@ def predict_all_datas_ml(pipeline):
     return df
 
 def main():
-    sgd_pipeline = pd.read_pickle('./versiona_vida_funcional_sgd/pipeline/sgd_pipeline_v5.pkl')
+    sgd_pipeline = joblib.load('./notebook/versiona_vida_funcional_sgd/pipeline/sgd_pipeline_v5.pkl')
     df = predict_all_datas_ml(sgd_pipeline)
 if __name__ == "__main__":
    main()  
