@@ -29,12 +29,6 @@ def main():
     conn = db_connect()
     id_versao_modelo_ml, id_versao_diff,nome_rubrix, dataset_id, versao_id, nome_pipeline, nome_dataset = retorna_parametros()
 
-    # print(ids[0])
-    # print(ids[1])
-    # print(ids[2])
-    # print(nome_rubrix)
-    # print(dataset_id)
-
     obj = Classificador(dataset_id, conn, nome_rubrix)
 
     df = select_itens_modelo_versao(conn, dataset_id, versao_id)
@@ -44,7 +38,7 @@ def main():
     df_erros = obj.extraindo_erros_dataset(df, sgd_pipeline)
 
     #envio de dados rubrix
-    obj.envio_rubrix(df_erros, sgd_pipeline, 'DecisionTreeClassifier')
+    obj.envio_rubrix(df_erros, sgd_pipeline, 'SGDClassifier')
             
     #machine learning
     obj.insere_labels('classificados', obj.conn, df, id_versao_modelo_ml, 'predict_classification', 'dados machine learning salvos no banco!!')
