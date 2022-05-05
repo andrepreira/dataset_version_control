@@ -29,20 +29,12 @@ def salva_merge(df, label_name, conn, id_versao, msg='dados salvos'):
     
     print(msg)
 
-def trata_df_rubrix(df):
-    # id_item dos dados classificados manualmente
-    df['id_item'] = df.id.apply(lambda x: x+1)
-    df = df.rename(columns = {'annotation': 'label'})
-    col = ['label', 'id_item']
-    df = df[col]
-    return df
-
 def load_df_rubrix(nome_rubrix):
      rb.init(api_url="http://localhost:6900")
 
      df = rb.load(nome_rubrix)
 
-     df = trata_df_rubrix(df)
+     df  = extrai_inputs_rubrix(df)
 
      return df
 
@@ -52,27 +44,38 @@ def insere_labels(name_table,conn, data, id_versao, label_name='label', msg='dad
         data.to_sql(name_table, conn, if_exists='append', index = False)
         print(msg)
 
-def substitui_labels_corrigidas(df_antigo, df_corrigido):
-    # labels corrigidas
-    lists_id_item = [idxx for idxx in df_corrigido.id_item]
-
-    # excluir labels antigas
-    print(len(df_antigo))
-    for idx, row in df_antigo.iterrows():
+def merge_dataset(df, df2):
+    # listas de id's
+    lists_id = [idx for idx in df2.id_item]
+    df[f'merge_label'] = df[f'label']
+  
+    print(len(df))
+    for idx, row in df.iterrows():
         id_item = row['id_item']
-        if id_item in lists_id_item:
-            df_antigo =  df_antigo.drop([idx])
-    print(len(df_antigo))
-
-    #substitui labels antigas pelas corrigidas
-    dfs = [df_antigo, df_corrigido]
-    df_antigo = pd.concat(dfs)
-    print(len(df_antigo))
-
-    return df_antigo
+        if id_item in lists_id:
+            df.loc[df.id_item == id_item, f'merge_label'] = df2['label'][df2.id_item == id_item].values[0]
+    print(len(df))
+    filtra = list(df2.id_item.apply(int))
+    print(df.query('id_item in @filtra').head(30))
+    col = ['merge_label', 'id_item']
+    df = df[col]
+    df = df.rename(columns = {'merge_label': 'label'})
+    return df
 
 def insere_id_versao(df, id_versao):
     df['id_versao'] = id_versao
+    return df
+
+def extrai_inputs_rubrix(df_rubrix):
+    df = None
+    df = pd.DataFrame()
+    for t, row in df_rubrix.iterrows():
+        df = df.append({'id_item': int(float(row['inputs']['id'])), 'label': row['annotation'], 'texto': row['inputs']['texto']}, ignore_index=True)
+#     print(row['id'], row['annotation'], row['inputs']['text'])
+    # df.to_pickle(f'./versiona_vida_funcional_sgd/dataset/df_correcao_rubrix_v{n_versao}.pkl')
+    df.id_item = df.id_item.apply(int)
+    col = ['label', 'id_item']
+    df = df[col]
     return df
 
 def main():
@@ -80,22 +83,16 @@ def main():
     conn = db_connect()
     id_version_rubrix, id_version_modelo_ml, id_version_merge, dataset_id, nome_rubrix = retorna_parametros()
 
-    # print(dataset_id)
-    # print(ids[0])
-    # print(ids[1])
-    # print(ids[2])
-    # print(nome_rubrix)
-
     c = Classificador(dataset_id, conn, nome_rubrix)
 
     df_corrigido = load_df_rubrix(nome_rubrix)
 
-    #salva labels classificadas manualmente no rubrix
-    insere_labels('classificados', conn, df_corrigido, id_version_rubrix, msg='dados rubrix salvos no banco!!')
-
     #pega labels machine learning no banco
     df_modelo = select_labels('classificados', conn, id_version_modelo_ml)
-    df = substitui_labels_corrigidas(df_modelo, df_corrigido)
+    df = merge_dataset(df_modelo, df_corrigido)
+
+    #salva labels classificadas manualmente no rubrix
+    insere_labels('classificados', conn, df_corrigido, id_version_rubrix, msg='dados rubrix salvos no banco!!')
 
     #merge das labels preditas pelo modelo e corrigidas manualmente no rubrix
     insere_labels('classificados', conn, df, id_version_merge, msg='dados merge salvos no banco!!')

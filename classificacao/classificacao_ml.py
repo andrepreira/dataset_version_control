@@ -49,9 +49,9 @@ def pipeline_vetorizacao_classificacao():
 def filtra_dataset(df, classification_list):
     # Filtra dataset
     df = df[df.status == 'classified']
-    outros = df.query("label_regex not in @classification_list & status == 'classified'")
-    outros['label_regex'] = 'OUTROS'
-    df_lista = df.query("label_regex in @classification_list")
+    outros = df.query("label not in @classification_list & status == 'classified'")
+    outros['label'] = 'OUTROS'
+    df_lista = df.query("label in @classification_list")
     # retorna dataset
     df_resultado = pd.concat([df_lista, outros])
     # df_resultado.reset_index()
@@ -69,7 +69,7 @@ def predict_ml(df, nome_pipeline, nome_dataset):
 
     df = filtra_dataset(df, lista)
     x = df.texto
-    y = df.label_regex
+    y = df.label
 
     x_train, x_test, y_train, y_test = train_test_split(
     x, y, test_size=0.5, random_state=42, shuffle=True)
@@ -78,6 +78,8 @@ def predict_ml(df, nome_pipeline, nome_dataset):
     sgd_pipeline = pipeline_vetorizacao_classificacao()
 
     sgd_pipeline.fit(x_train, y_train)
+
+    print(sgd_pipeline.score(x_test, y_test))
 
     y_pred_all = sgd_pipeline.predict(df.texto)
 
