@@ -18,14 +18,13 @@ def select_itens_modelo_versao(conn, id_dataset, id_versao):
     classificados = import_table('classificados', conn)
 
     query = db.select([item.columns.texto, classificados.columns.label, 
-    item.columns.id]).where(item.columns.id == classificados.columns.id_item 
-    and item.columns.id_dataset == id_dataset and classificados.columns.id_versao == id_versao)
+    item.columns.id]).where(db.and_(item.columns.id == classificados.columns.id_item,
+     item.columns.id_dataset == id_dataset, classificados.columns.id_versao == id_versao))
 
     r =  conn.execute(query).fetchall()
     df = pd.DataFrame(r)
     df.columns = r[0].keys()
-    df.rename(columns={"label": "label_regex"}, inplace = True)
-    df['status'] = df['label_regex'].apply(lambda x: 'classified' if x else 'unclassified')
+    df['status'] = df['label'].apply(lambda x: 'classified' if x else 'unclassified')
     return  df
     
 def select_labels(table_name, conn, id_versao):

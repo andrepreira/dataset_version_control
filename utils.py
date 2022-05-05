@@ -56,9 +56,6 @@ def verifica_textos_repetidos(df, df2):
 from sklearn.metrics import confusion_matrix
 import seaborn as sns
 
-from sklearn.metrics import confusion_matrix
-import seaborn as sns
-
 def plot_confusion_matrix(y_test, y_pred, model):
     conf_mat = confusion_matrix(y_test, y_pred)
     print('Matriz de Confusão')
@@ -148,8 +145,6 @@ def dataframe(recived_data):
         file = archive_txt_with_path(path)
 #         print(f'path: {path} -  classification: {was_classifield}')
         datas = datas.append({'texto': file}, ignore_index=True)
-    
-    datas['id_item'] = datas.index
     
     return datas
 

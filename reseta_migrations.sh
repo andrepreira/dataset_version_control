@@ -2,6 +2,6 @@
 
 cd ./database
 
-alembic downgrade -5
+alembic downgrade -6
 
-alembic upgrade +5
+alembic upgrade +6

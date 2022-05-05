@@ -2,7 +2,7 @@ alembic init <name_directory>
 
 alembic current
 
-alembic revision -m <name_directory>
+alembic revision -m <name_migration>
 
 - criando requirements.txt
 

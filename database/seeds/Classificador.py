@@ -33,7 +33,7 @@ class Classificador:
         print(msg)
 
     def extraindo_erros_dataset(self, df, pipeline):
-        df2 = df[df['label_regex'] != df['predict_classification']]
+        df2 = df[df['label'] != df['predict_classification']]
         erros = df2[df2['predict_proba_label'].apply(max) < 0.9]
 
         erros_prob = pipeline.predict_proba(erros.texto)
@@ -50,7 +50,7 @@ class Classificador:
         records = [
             rb.TextClassificationRecord(
                 id=idx,
-                inputs=[row['texto'], row['id']],
+                inputs={'id': row['id'], 'texto': row['texto']},
                 prediction=list(zip(pipeline.classes_, row['probabilities'])),
                 prediction_agent=agent_name,
 
