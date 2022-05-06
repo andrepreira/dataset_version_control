@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import glob
 import re
+from pathlib import Path
 
 from classificacao.EventSearch import EventSearcher as event
 
@@ -150,3 +151,6 @@ def dataframe(recived_data):
 
 def read_dataset_pkl(dataset_name):
     return pd.read_pickle(f'./{dataset_name}.pkl')
+
+def create_parent_folder(file_path):
+        Path(Path(file_path).parent).mkdir(parents=True, exist_ok=True)

@@ -1,4 +1,4 @@
-import utils
+from utils import *
 
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -57,7 +57,10 @@ def filtra_dataset(df, classification_list):
     # df_resultado.reset_index()
     return df_resultado
                 
-def predict_ml(df, nome_pipeline, nome_dataset):
+def predict_ml(df, nome_pipeline,nome_pipeline_antigo, nome_dataset):
+    create_parent_folder('./versiona_vida_funcional_sgd/pipeline')
+    create_parent_folder('./versiona_vida_funcional_sgd/dataset')
+
     lista = [
     'NOMEACAO DE CARGO EM COMISSAO',
     'EXONERACAO DE CARGO EFETIVO', 
@@ -75,11 +78,53 @@ def predict_ml(df, nome_pipeline, nome_dataset):
     x, y, test_size=0.5, random_state=42, shuffle=True)
 
     # Vetorização TD-IDF e pipeline
+    sgd_pipeline = joblib.load(f'./versiona_vida_funcional_sgd/pipeline/{nome_pipeline_antigo}.pkl')
+
+    sgd_pipeline.fit(x_train, y_train)
+
+    print(f'score = {sgd_pipeline.score(x_test, y_test)}')
+
+    y_pred_all = sgd_pipeline.predict(df.texto)
+
+    df['predict_classification'] = y_pred_all
+
+    y_pred_proba_all = sgd_pipeline.predict_proba(df.texto)
+
+    df['predict_proba_label'] = list(y_pred_proba_all)
+
+    joblib.dump(sgd_pipeline, f'./versiona_vida_funcional_sgd/pipeline/{nome_pipeline}.pkl')
+    df.to_pickle(f'./versiona_vida_funcional_sgd/dataset/{nome_dataset}.pkl')
+   
+    return df, sgd_pipeline
+
+def predict_regex_ml(df, nome_pipeline, nome_dataset, label_name):
+    create_parent_folder('./versiona_vida_funcional_sgd/pipeline')
+    create_parent_folder('./versiona_vida_funcional_sgd/dataset')
+
+    lista = [
+    'NOMEACAO DE CARGO EM COMISSAO',
+    'EXONERACAO DE CARGO EFETIVO', 
+    'EXONERACAO DE CARGO EM COMISSAO', 
+    'NOMEACAO EM CARGO EFETIVO',
+    'DEMISSAO',
+    'APOSENTADORIA'
+    ]
+
+    df = df.rename(columns = {label_name: 'label'})
+    df = filtra_dataset(df, lista)
+    
+    x = df.texto
+    y = df.label
+
+    x_train, x_test, y_train, y_test = train_test_split(
+    x, y, test_size=0.5, random_state=42, shuffle=True)
+
+    # Vetorização TD-IDF e pipeline
     sgd_pipeline = pipeline_vetorizacao_classificacao()
 
     sgd_pipeline.fit(x_train, y_train)
 
-    print(sgd_pipeline.score(x_test, y_test))
+    print(f'score = {sgd_pipeline.score(x_test, y_test)}')
 
     y_pred_all = sgd_pipeline.predict(df.texto)
 
