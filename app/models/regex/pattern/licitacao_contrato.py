@@ -1,0 +1,20 @@
+def regex():
+    return [
+            ('TERMO DE APOSTILAMENTO AO CONTRATO', [r'termo de apostilamento ao contrato', r'TERMO DE APOSTILAMENTO AO CONTRATO']),
+            ('TERMO DE RATIFICACAO', [r'termo de ratificacao', r'RATIFICACAO DE INEXIGIBILIDADE', r'TERMO DE RATIFICACAO']),
+            ('EXTRATO DE CONTRATO', [r'extrato de contrato', r'EXTRATO DO CONTRATO']),
+            ('TERMO ADITIVO', [r'termo aditivo', r'EXTRATO DE TERMO ADITIVO']),
+            ('EXTRATO DE DISTRATO', [r'extrato de distrato']),            
+            ('EXTRATO DE DISPENSA DE LICITACAO', [r'extrato de dispensa de licitacao']),
+            ('AVISO DE INEXIGIBILIDADE', [r'aviso de inexigibilidade']),            
+            ('EXTRATO DE INEXIGIBILIDADE', [r'extrato de inexigibilidade', r'EXTRATO DE INEXIGIBILIDADE', r'EXTRATO CONTRATUAL INEXIGIBILIDADE']),
+            ('AVISO DE LICITACAO', [r'aviso de licitacao', r'AVISO DE LICITACAO']),
+            ('AVISO DE LICITACAO - PREGAO', [r'\sLICITACAO', r'PREGAO ELETRONICO', r'PREGAO']),
+            ('AVISO DE LICITACAO - TOMADA DE PRECOS', [r'TOMADA DE PRECOS', r'AVISO DE LICITACAO TOMADA DE PRECOS']),
+            ('RETIFICACAO DE LICITACAO', [r'retificacao de licitacao', r'RETIFICACAO DE LICITACAO', r'RETIFICACAO DO PREGAO']),
+            ('AVISO DE SUSPENSAO', [r'aviso de suspensao']),
+            ('AVISO DE COTACAO', [r'aviso de cotacao', r'AVISO DE COTACAO']),
+            ('HOMOLOGACAO', [r'homologacao', r'HOMOLOGACAO']),
+            ('ADJUDICACAO', [r'adjudicacao', r'ADJUDICACAO']),
+            ('EXTRATO DE ATA DE REGISTRO DE PRECO', [r'extrato de ata de registro de preco', r'EXTRATO DE ATA DE REGISTRO DE PRECOS']),
+        ]
