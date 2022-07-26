@@ -1,5 +1,10 @@
 *.pkl
 *.pyc
+*.log
 *.jsonl
 .env
 .vscode
+bd
+pgadmin
+.vscode/
+__pycache__
