@@ -1,5 +1,5 @@
 
 
-ini:
-	sudo service postgresql restart
-	export PYTHONPATH="${PYTHONPATH}:$(shell pwd)"
+path:
+		export PYTHONPATH="${PYTHONPATH}:$(shell pwd)"
+		sudo service postgresql restart
